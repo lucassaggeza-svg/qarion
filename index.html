@@ -11,22 +11,12 @@
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <style>
+*{box-sizing:border-box}
 body{
   margin:0;
   font-family:'Inter', sans-serif;
-  background:#0b0f1a;
-  color:#e5e7eb;
-}
-
-/* ===== ANIMAÇÕES ===== */
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(30px)}
-  to{opacity:1; transform:translateY(0)}
-}
-
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.06)}
+  background:#f3f2ee;
+  color:#1f3d2b;
 }
 
 /* ===== LOGIN ===== */
@@ -38,66 +28,73 @@ body{
 }
 
 .card{
-  background:#11162a;
-  padding:45px;
-  border-radius:14px;
-  border:1px solid #1f2a44;
+  background:#e6e3dc;
+  padding:48px;
+  border-radius:18px;
+  border:1px solid #cfcac0;
   width:420px;
   text-align:center;
-  animation:fadeUp 1s ease;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
 
-.login-logo{
-  width:320px;
+.card h1{
+  font-family:'Orbitron';
+  font-size:42px;
+  color:#2f6f4e;
   margin-bottom:30px;
-  animation:pulse 2.8s infinite;
 }
 
 input{
   width:100%;
   padding:14px;
   margin-bottom:14px;
-  background:#0b0f1a;
-  border:1px solid #1f2a44;
-  color:#fff;
-  border-radius:8px;
+  background:#f3f2ee;
+  border:1px solid #cfcac0;
+  color:#1f3d2b;
+  border-radius:10px;
   font-size:15px;
+}
+
+input::placeholder{
+  color:#6b8a78;
 }
 
 button{
   width:100%;
   padding:14px;
-  background:#3b82f6;
+  background:#2f6f4e;
   border:none;
-  font-weight:bold;
+  border-radius:10px;
+  font-weight:600;
+  color:#fff;
   cursor:pointer;
-  border-radius:8px;
   font-size:15px;
 }
 
 button:hover{
-  opacity:.9;
+  background:#25583f;
 }
 
 #msg{
-  margin-top:12px;
-  color:#f87171;
+  margin-top:14px;
+  color:#9b2c2c;
 }
 
 /* ===== HEADER ===== */
 header{
-  height:72px;
-  background:#020617;
+  height:70px;
+  background:#e6e3dc;
   display:flex;
   align-items:center;
   padding:0 40px;
   position:sticky;
   top:0;
-  z-index:100;
+  border-bottom:1px solid #cfcac0;
 }
 
-.logo-topo{
-  height:48px;
+header h2{
+  font-family:'Orbitron';
+  color:#2f6f4e;
   margin-right:40px;
 }
 
@@ -110,98 +107,81 @@ nav{
 
 .menu-item{
   position:relative;
-}
-
-.menu-btn{
   cursor:pointer;
-  user-select:none;
+  font-weight:500;
+  color:#1f3d2b;
 }
 
 .dropdown{
   display:none;
   position:absolute;
-  top:42px;
+  top:40px;
   left:0;
-  background:#11162a;
-  border:1px solid #1f2a44;
-  border-radius:10px;
-  min-width:230px;
+  background:#f3f2ee;
+  border:1px solid #cfcac0;
+  border-radius:12px;
+  min-width:220px;
   max-height:260px;
   overflow-y:auto;
-  z-index:999;
+  z-index:10;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
 .dropdown div{
-  padding:11px 15px;
-  cursor:pointer;
+  padding:12px 16px;
+  color:#1f3d2b;
 }
 
 .dropdown div:hover{
-  background:#1f2a44;
+  background:#e6e3dc;
 }
 
 .menu-item.active .dropdown{
   display:block;
 }
 
-/* ===== SEARCH ===== */
-.search-bar input{
-  width:260px;
-}
-
-/* ===== BANNER ===== */
-.banner{
-  height:520px;
-  background:radial-gradient(circle at top, #1e293b, #020617);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-}
-
-.banner-logo{
-  width:260px;
-  margin-bottom:25px;
-  animation:fadeUp 1.2s ease;
-}
-
-.banner span{
-  font-size:28px;
-  color:#9ca3af;
-  margin-top:15px;
-  transition:opacity .5s;
-}
-
-/* ===== CONTENT ===== */
+/* ===== MAIN ===== */
 main{
   padding:60px;
+}
+
+main h2{
+  color:#2f6f4e;
+  font-size:28px;
+}
+
+main p{
+  color:#4f6f5a;
+  font-size:16px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== LOGIN ===== -->
+<!-- LOGIN -->
 <div id="login">
   <div class="card">
-    <img src="sgq.png" class="login-logo">
+    <h1>QArion</h1>
+
     <form id="loginForm">
       <input id="email" type="email" placeholder="Email" required>
       <input id="password" type="password" placeholder="Senha" required>
-      <button type="submit">ENTRAR</button>
+      <button type="submit">Entrar</button>
     </form>
+
     <p id="msg"></p>
   </div>
 </div>
 
-<!-- ===== APP ===== -->
+<!-- APP -->
 <div id="app" style="display:none">
 
 <header>
-  <img src="sgq.png" class="logo-topo">
+  <h2>QArion</h2>
 
   <nav>
+
     <div class="menu-item">
       <div class="menu-btn">Processos ▾</div>
       <div class="dropdown" id="menu-processos"></div>
@@ -224,16 +204,8 @@ main{
     <div class="menu-item">Pendências</div>
     <div class="menu-item" onclick="logout()">Logout</div>
 
-    <div class="search-bar">
-      <input placeholder="Buscar por código ou nome...">
-    </div>
   </nav>
 </header>
-
-<section class="banner">
-  <img src="sgq.png" class="banner-logo">
-  <span id="bannerWords"></span>
-</section>
 
 <main>
   <h2>Bem-vindo ao QArion</h2>
@@ -262,33 +234,44 @@ document.getElementById("loginForm").addEventListener("submit", async (e)=>{
   if(error){
     msg.innerText = error.message
   }else{
-    login.style.display="none"
-    app.style.display="block"
+    login.style.display = "none"
+    app.style.display = "block"
     carregarAreas()
   }
 })
 
-/* ===== AREAS ===== */
+/* ===== CARREGAR ÁREAS ===== */
 async function carregarAreas(){
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('areas')
     .select('id,nome')
     .eq('ativa', true)
     .order('nome')
 
-  document.getElementById("menu-processos").innerHTML=''
-  document.getElementById("menu-it").innerHTML=''
+  if(error){
+    console.error(error)
+    return
+  }
+
+  menuProcessos.innerHTML=''
+  menuIT.innerHTML=''
 
   data.forEach(a=>{
     const d1=document.createElement('div')
     d1.innerText=a.nome
-    const d2=d1.cloneNode(true)
-    document.getElementById("menu-processos").appendChild(d1)
-    document.getElementById("menu-it").appendChild(d2)
+
+    const d2=document.createElement('div')
+    d2.innerText=a.nome
+
+    menuProcessos.appendChild(d1)
+    menuIT.appendChild(d2)
   })
 }
 
-/* ===== DROPDOWNS ===== */
+const menuProcessos=document.getElementById("menu-processos")
+const menuIT=document.getElementById("menu-it")
+
+/* ===== DROPDOWN ===== */
 document.querySelectorAll('.menu-btn').forEach(btn=>{
   btn.onclick=e=>{
     e.stopPropagation()
@@ -300,22 +283,6 @@ document.querySelectorAll('.menu-btn').forEach(btn=>{
 document.body.onclick=()=>{
   document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'))
 }
-
-/* ===== BANNER WORDS ===== */
-const palavras=[
-  "Qualidade","Melhoria Contínua","Excelência","Inovação",
-  "Criatividade","Processos","Gestão","Liderança","Sustentabilidade"
-]
-
-let i=0
-setInterval(()=>{
-  bannerWords.style.opacity=0
-  setTimeout(()=>{
-    bannerWords.innerText=palavras[i]
-    bannerWords.style.opacity=1
-    i=(i+1)%palavras.length
-  },300)
-},2000)
 
 /* ===== LOGOUT ===== */
 async function logout(){

@@ -18,7 +18,7 @@ body{
   color:#e5e7eb;
 }
 
-/* ===== LOGIN ===== */
+/* LOGIN */
 #login{
   height:100vh;
   display:flex;
@@ -52,7 +52,7 @@ button{
   cursor:pointer;
 }
 
-/* ===== MENU ===== */
+/* MENU */
 header{
   height:70px;
   background:#020617;
@@ -80,7 +80,6 @@ nav{
 .menu-item{
   position:relative;
   cursor:pointer;
-  user-select:none;
 }
 
 .dropdown{
@@ -93,7 +92,6 @@ nav{
   min-width:220px;
   max-height:260px;
   overflow-y:auto;
-  z-index:10;
 }
 
 .menu-item:hover .dropdown{
@@ -109,7 +107,7 @@ nav{
   background:#1f2a44;
 }
 
-/* ===== SEARCH ===== */
+/* SEARCH */
 .search-bar{
   margin-left:30px;
 }
@@ -118,12 +116,11 @@ nav{
   width:260px;
 }
 
-/* ===== BANNER ===== */
+/* BANNER */
 .banner{
   height:520px;
   background:
-    radial-gradient(circle at top, #1e293b, #020617),
-    linear-gradient(120deg, rgba(59,130,246,.1), transparent);
+    radial-gradient(circle at top, #1e293b, #020617);
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -142,10 +139,8 @@ nav{
   font-size:28px;
   color:#9ca3af;
   margin-top:15px;
-  transition:all .5s;
 }
 
-/* ===== CONTENT ===== */
 main{
   padding:60px;
 }
@@ -165,12 +160,11 @@ main{
   </div>
 </div>
 
-<!-- SISTEMA -->
+<!-- APP -->
 <div id="app" style="display:none">
 
 <header>
   <div class="logo">QArion</div>
-
   <nav>
 
     <div class="menu-item">Processos ▾
@@ -193,7 +187,7 @@ main{
     <div class="menu-item" onclick="logout()">Logout</div>
 
     <div class="search-bar">
-      <input id="searchGlobal" placeholder="Buscar por código ou nome...">
+      <input placeholder="Buscar por código ou nome...">
     </div>
 
   </nav>
@@ -212,14 +206,14 @@ main{
 </div>
 
 <script>
-/* ===== SUPABASE ===== */
+/* SUPABASE */
 const supabase = window.supabase.createClient(
   'https://shsjvovmdnhshrwmmcvv.supabase.co',
-  'SUA_ANON_PUBLIC_KEY_AQUI'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
 )
 
-/* ===== LOGIN ===== */
-document.getElementById("loginBtn").onclick = async () => {
+/* LOGIN */
+loginBtn.onclick = async () => {
   const { error } = await supabase.auth.signInWithPassword({
     email: email.value,
     password: password.value
@@ -234,7 +228,7 @@ document.getElementById("loginBtn").onclick = async () => {
   }
 }
 
-/* ===== AREAS ===== */
+/* AREAS */
 async function carregarAreas(){
   const { data } = await supabase
     .from('areas')
@@ -242,22 +236,22 @@ async function carregarAreas(){
     .eq('ativa',true)
     .order('nome')
 
-  const menus = [menuProcessos, menuIT]
-
-  menus.forEach(menu => menu.innerHTML = '')
+  menuProcessos.innerHTML = ''
+  menuIT.innerHTML = ''
 
   data.forEach(area=>{
     const item = document.createElement('div')
     item.innerText = area.nome
     item.onclick = ()=> alert('Área selecionada: ' + area.nome)
-    menus.forEach(menu=>menu.appendChild(item.cloneNode(true)))
+    menuProcessos.appendChild(item)
+    menuIT.appendChild(item.cloneNode(true))
   })
 }
 
 const menuProcessos = document.getElementById('menu-processos')
 const menuIT = document.getElementById('menu-it')
 
-/* ===== BANNER WORDS ===== */
+/* BANNER WORDS */
 const palavras = [
   "Qualidade",
   "Melhoria Contínua",
@@ -276,7 +270,7 @@ setInterval(()=>{
   i = (i+1)%palavras.length
 },2000)
 
-/* ===== LOGOUT ===== */
+/* LOGOUT */
 async function logout(){
   await supabase.auth.signOut()
   location.reload()

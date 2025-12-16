@@ -18,25 +18,7 @@ body{
   color:#e5e7eb;
 }
 
-/* ================= ANIMAÇÕES ================= */
-@keyframes logoEnter {
-  0% { opacity:0; transform:scale(.6); filter:blur(8px); }
-  100% { opacity:1; transform:scale(1); filter:blur(0); }
-}
-
-@keyframes float {
-  0% { transform:translateY(0); }
-  50% { transform:translateY(-10px); }
-  100% { transform:translateY(0); }
-}
-
-@keyframes glow {
-  0% { filter:drop-shadow(0 0 5px #3b82f6); }
-  50% { filter:drop-shadow(0 0 25px #3b82f6); }
-  100% { filter:drop-shadow(0 0 5px #3b82f6); }
-}
-
-/* ================= LOGIN ================= */
+/* ===== LOGIN ===== */
 #login{
   height:100vh;
   display:flex;
@@ -47,17 +29,21 @@ body{
 .card{
   background:#11162a;
   padding:40px;
-  border-radius:14px;
+  border-radius:12px;
   border:1px solid #1f2a44;
   width:360px;
   text-align:center;
 }
 
-/* LOGO LOGIN */
 .login-logo{
   width:160px;
   margin-bottom:25px;
-  animation:logoEnter 1.2s ease forwards, glow 3s infinite;
+  animation: enter 1.5s ease forwards;
+}
+
+@keyframes enter{
+  from{opacity:0; transform:translateY(-20px) scale(.9);}
+  to{opacity:1; transform:none;}
 }
 
 input{
@@ -78,7 +64,7 @@ button{
   cursor:pointer;
 }
 
-/* ================= HEADER ================= */
+/* ===== HEADER ===== */
 header{
   height:70px;
   background:#020617;
@@ -90,11 +76,19 @@ header{
   z-index:100;
 }
 
-/* LOGO HEADER */
-.header-logo{
-  height:42px;
-  margin-right:35px;
-  animation:glow 4s infinite;
+.logo{
+  margin-right:40px;
+}
+
+.logo img{
+  height:40px;
+  animation: glow 2.5s ease-in-out infinite;
+}
+
+@keyframes glow{
+  0%{filter:drop-shadow(0 0 5px #3b82f6);}
+  50%{filter:drop-shadow(0 0 25px #3b82f6);}
+  100%{filter:drop-shadow(0 0 5px #3b82f6);}
 }
 
 nav{
@@ -116,6 +110,7 @@ nav{
   display:none;
   position:absolute;
   top:40px;
+  left:0;
   background:#11162a;
   border:1px solid #1f2a44;
   border-radius:8px;
@@ -123,10 +118,6 @@ nav{
   max-height:260px;
   overflow-y:auto;
   z-index:999;
-}
-
-.menu-item.active .dropdown{
-  display:block;
 }
 
 .dropdown div{
@@ -138,12 +129,16 @@ nav{
   background:#1f2a44;
 }
 
-/* ================= SEARCH ================= */
+.menu-item.active .dropdown{
+  display:block;
+}
+
+/* ===== SEARCH ===== */
 .search-bar input{
   width:260px;
 }
 
-/* ================= BANNER ================= */
+/* ===== BANNER ===== */
 .banner{
   height:520px;
   background:radial-gradient(circle at top, #1e293b, #020617);
@@ -154,21 +149,20 @@ nav{
   text-align:center;
 }
 
-/* LOGO BANNER */
-.banner-logo{
-  width:220px;
-  margin-bottom:25px;
-  animation:float 4s ease-in-out infinite, glow 5s infinite;
+.banner img{
+  width:180px;
+  margin-bottom:20px;
+  animation: glow 2.5s ease-in-out infinite;
 }
 
 .banner span{
-  font-size:28px;
+  font-size:30px;
   color:#9ca3af;
-  margin-top:10px;
+  opacity:0;
   transition:opacity .5s;
 }
 
-/* ================= CONTENT ================= */
+/* ===== CONTENT ===== */
 main{
   padding:60px;
 }
@@ -177,22 +171,24 @@ main{
 
 <body>
 
-<!-- ================= LOGIN ================= -->
+<!-- LOGIN -->
 <div id="login">
-  <div class="card">
+  <form class="card" id="loginForm">
     <img src="logo.png.png" class="login-logo">
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Senha">
-    <button id="loginBtn">ENTER</button>
+    <input id="email" type="email" placeholder="Email" required>
+    <input id="password" type="password" placeholder="Senha" required>
+    <button type="submit">ENTER</button>
     <p id="msg"></p>
-  </div>
+  </form>
 </div>
 
-<!-- ================= APP ================= -->
+<!-- APP -->
 <div id="app" style="display:none">
 
 <header>
-  <img src="logo.png.png" class="header-logo">
+  <div class="logo">
+    <img src="logo.png.png">
+  </div>
 
   <nav>
     <div class="menu-item">
@@ -224,7 +220,7 @@ main{
 </header>
 
 <section class="banner">
-  <img src="logo.png.png" class="banner-logo">
+  <img src="logo.png.png">
   <span id="bannerWords"></span>
 </section>
 
@@ -239,11 +235,15 @@ main{
 /* ===== SUPABASE ===== */
 const supabase = window.supabase.createClient(
   'https://shsjvovmdnhshrwmmcvv.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
 )
 
 /* ===== LOGIN ===== */
-loginBtn.onclick = async () => {
+document.getElementById("loginForm").addEventListener("submit", async (e)=>{
+  e.preventDefault()
+  const msg = document.getElementById("msg")
+  msg.innerText = "Entrando..."
+
   const { error } = await supabase.auth.signInWithPassword({
     email: email.value,
     password: password.value
@@ -252,59 +252,53 @@ loginBtn.onclick = async () => {
   if(error){
     msg.innerText = error.message
   } else {
-    login.style.display = "none"
-    app.style.display = "block"
+    login.style.display="none"
+    app.style.display="block"
     carregarAreas()
   }
-}
+})
 
 /* ===== AREAS ===== */
 async function carregarAreas(){
   const { data } = await supabase
     .from('areas')
-    .select('id,nome')
-    .eq('ativa', true)
+    .select('nome')
+    .eq('ativa',true)
     .order('nome')
 
-  menuProcessos.innerHTML = ''
-  menuIT.innerHTML = ''
+  menuProcessos.innerHTML=''
+  menuIT.innerHTML=''
 
-  data.forEach(area=>{
-    const d1 = document.createElement('div')
-    d1.innerText = area.nome
-    menuProcessos.appendChild(d1)
+  data.forEach(a=>{
+    const p=document.createElement('div')
+    p.innerText=a.nome
+    menuProcessos.appendChild(p)
 
-    const d2 = document.createElement('div')
-    d2.innerText = area.nome
-    menuIT.appendChild(d2)
+    const it=p.cloneNode(true)
+    menuIT.appendChild(it)
   })
 }
 
 /* ===== DROPDOWN ===== */
 document.querySelectorAll('.menu-btn').forEach(btn=>{
-  btn.onclick = (e)=>{
+  btn.onclick=(e)=>{
     e.stopPropagation()
     document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'))
     btn.parentElement.classList.toggle('active')
   }
 })
-
-document.body.onclick = ()=>{
-  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'))
-}
+document.body.onclick=()=>document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'))
 
 /* ===== BANNER WORDS ===== */
-const palavras = [
-  "Qualidade","Melhoria Contínua","Excelência",
-  "Inovação","Criatividade","Processos",
-  "Gestão","Liderança","Sustentabilidade"
+const palavras=[
+  "Qualidade","Melhoria Contínua","Excelência","Inovação",
+  "Criatividade","Processos","Gestão","Liderança","Sustentabilidade"
 ]
-
 let i=0
 setInterval(()=>{
   bannerWords.style.opacity=0
   setTimeout(()=>{
-    bannerWords.innerText = palavras[i]
+    bannerWords.innerText=palavras[i]
     bannerWords.style.opacity=1
     i=(i+1)%palavras.length
   },300)

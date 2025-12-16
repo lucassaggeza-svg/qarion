@@ -18,7 +18,25 @@ body{
   color:#e5e7eb;
 }
 
-/* ===== LOGIN ===== */
+/* ================= ANIMAÇÕES ================= */
+@keyframes logoEnter {
+  0% { opacity:0; transform:scale(.6); filter:blur(8px); }
+  100% { opacity:1; transform:scale(1); filter:blur(0); }
+}
+
+@keyframes float {
+  0% { transform:translateY(0); }
+  50% { transform:translateY(-10px); }
+  100% { transform:translateY(0); }
+}
+
+@keyframes glow {
+  0% { filter:drop-shadow(0 0 5px #3b82f6); }
+  50% { filter:drop-shadow(0 0 25px #3b82f6); }
+  100% { filter:drop-shadow(0 0 5px #3b82f6); }
+}
+
+/* ================= LOGIN ================= */
 #login{
   height:100vh;
   display:flex;
@@ -29,9 +47,17 @@ body{
 .card{
   background:#11162a;
   padding:40px;
-  border-radius:12px;
+  border-radius:14px;
   border:1px solid #1f2a44;
   width:360px;
+  text-align:center;
+}
+
+/* LOGO LOGIN */
+.login-logo{
+  width:160px;
+  margin-bottom:25px;
+  animation:logoEnter 1.2s ease forwards, glow 3s infinite;
 }
 
 input{
@@ -52,7 +78,7 @@ button{
   cursor:pointer;
 }
 
-/* ===== HEADER / MENU ===== */
+/* ================= HEADER ================= */
 header{
   height:70px;
   background:#020617;
@@ -64,11 +90,11 @@ header{
   z-index:100;
 }
 
-.logo{
-  font-family:'Orbitron';
-  color:#3b82f6;
-  font-size:22px;
-  margin-right:40px;
+/* LOGO HEADER */
+.header-logo{
+  height:42px;
+  margin-right:35px;
+  animation:glow 4s infinite;
 }
 
 nav{
@@ -90,7 +116,6 @@ nav{
   display:none;
   position:absolute;
   top:40px;
-  left:0;
   background:#11162a;
   border:1px solid #1f2a44;
   border-radius:8px;
@@ -98,6 +123,10 @@ nav{
   max-height:260px;
   overflow-y:auto;
   z-index:999;
+}
+
+.menu-item.active .dropdown{
+  display:block;
 }
 
 .dropdown div{
@@ -109,17 +138,12 @@ nav{
   background:#1f2a44;
 }
 
-/* Abre por classe (JS controla) */
-.menu-item.active .dropdown{
-  display:block;
-}
-
-/* ===== SEARCH ===== */
+/* ================= SEARCH ================= */
 .search-bar input{
   width:260px;
 }
 
-/* ===== BANNER ===== */
+/* ================= BANNER ================= */
 .banner{
   height:520px;
   background:radial-gradient(circle at top, #1e293b, #020617);
@@ -130,21 +154,21 @@ nav{
   text-align:center;
 }
 
-.banner h1{
-  font-family:'Orbitron';
-  font-size:64px;
-  color:#3b82f6;
-  text-shadow:0 0 25px #3b82f6;
+/* LOGO BANNER */
+.banner-logo{
+  width:220px;
+  margin-bottom:25px;
+  animation:float 4s ease-in-out infinite, glow 5s infinite;
 }
 
 .banner span{
   font-size:28px;
   color:#9ca3af;
-  margin-top:15px;
+  margin-top:10px;
   transition:opacity .5s;
 }
 
-/* ===== CONTENT ===== */
+/* ================= CONTENT ================= */
 main{
   padding:60px;
 }
@@ -153,10 +177,10 @@ main{
 
 <body>
 
-<!-- LOGIN -->
+<!-- ================= LOGIN ================= -->
 <div id="login">
   <div class="card">
-    <h2>QArion</h2>
+    <img src="logo.png.png" class="login-logo">
     <input id="email" placeholder="Email">
     <input id="password" type="password" placeholder="Senha">
     <button id="loginBtn">ENTER</button>
@@ -164,25 +188,24 @@ main{
   </div>
 </div>
 
-<!-- APP -->
+<!-- ================= APP ================= -->
 <div id="app" style="display:none">
 
 <header>
-  <div class="logo">QArion</div>
+  <img src="logo.png.png" class="header-logo">
 
   <nav>
-
-    <div class="menu-item" id="menuProcessosBox">
+    <div class="menu-item">
       <div class="menu-btn">Processos ▾</div>
       <div class="dropdown" id="menu-processos"></div>
     </div>
 
-    <div class="menu-item" id="menuITBox">
+    <div class="menu-item">
       <div class="menu-btn">Instruções de Trabalho ▾</div>
       <div class="dropdown" id="menu-it"></div>
     </div>
 
-    <div class="menu-item" id="menuCMBox">
+    <div class="menu-item">
       <div class="menu-btn">Controle de Mudança ▾</div>
       <div class="dropdown">
         <div>Novo CM</div>
@@ -197,12 +220,11 @@ main{
     <div class="search-bar">
       <input placeholder="Buscar por código ou nome...">
     </div>
-
   </nav>
 </header>
 
 <section class="banner">
-  <h1>QArion</h1>
+  <img src="logo.png.png" class="banner-logo">
   <span id="bannerWords"></span>
 </section>
 
@@ -214,7 +236,7 @@ main{
 </div>
 
 <script>
-/* ===== SUPABASE (CHAVE CORRETA) ===== */
+/* ===== SUPABASE ===== */
 const supabase = window.supabase.createClient(
   'https://shsjvovmdnhshrwmmcvv.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
@@ -238,41 +260,32 @@ loginBtn.onclick = async () => {
 
 /* ===== AREAS ===== */
 async function carregarAreas(){
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('areas')
     .select('id,nome')
     .eq('ativa', true)
     .order('nome')
 
-  if(error){
-    console.error(error)
-    return
-  }
-
   menuProcessos.innerHTML = ''
   menuIT.innerHTML = ''
 
   data.forEach(area=>{
-    const item1 = document.createElement('div')
-    item1.innerText = area.nome
-    item1.onclick = ()=> alert('Processos → ' + area.nome)
+    const d1 = document.createElement('div')
+    d1.innerText = area.nome
+    menuProcessos.appendChild(d1)
 
-    const item2 = document.createElement('div')
-    item2.innerText = area.nome
-    item2.onclick = ()=> alert('IT → ' + area.nome)
-
-    menuProcessos.appendChild(item1)
-    menuIT.appendChild(item2)
+    const d2 = document.createElement('div')
+    d2.innerText = area.nome
+    menuIT.appendChild(d2)
   })
 }
 
-/* ===== DROPDOWN CLICK ===== */
+/* ===== DROPDOWN ===== */
 document.querySelectorAll('.menu-btn').forEach(btn=>{
   btn.onclick = (e)=>{
     e.stopPropagation()
-    const parent = btn.parentElement
     document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'))
-    parent.classList.toggle('active')
+    btn.parentElement.classList.toggle('active')
   }
 })
 
@@ -282,24 +295,18 @@ document.body.onclick = ()=>{
 
 /* ===== BANNER WORDS ===== */
 const palavras = [
-  "Qualidade",
-  "Melhoria Contínua",
-  "Excelência",
-  "Inovação",
-  "Criatividade",
-  "Processos",
-  "Gestão",
-  "Liderança",
-  "Sustentabilidade"
+  "Qualidade","Melhoria Contínua","Excelência",
+  "Inovação","Criatividade","Processos",
+  "Gestão","Liderança","Sustentabilidade"
 ]
 
 let i=0
 setInterval(()=>{
-  bannerWords.style.opacity = 0
+  bannerWords.style.opacity=0
   setTimeout(()=>{
     bannerWords.innerText = palavras[i]
-    bannerWords.style.opacity = 1
-    i = (i+1)%palavras.length
+    bannerWords.style.opacity=1
+    i=(i+1)%palavras.length
   },300)
 },2000)
 

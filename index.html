@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <title>QArion – Quality Management System</title>
 
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Supabase v2 -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <style>
@@ -14,12 +17,15 @@ body{
   background:#0b0f1a;
   color:#e5e7eb;
 }
+
+/* LOGIN */
 #login{
   height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
 }
+
 .card{
   background:#11162a;
   padding:40px;
@@ -27,6 +33,7 @@ body{
   border:1px solid #1f2a44;
   width:360px;
 }
+
 input{
   width:100%;
   padding:12px;
@@ -35,6 +42,7 @@ input{
   border:1px solid #1f2a44;
   color:#fff;
 }
+
 button{
   width:100%;
   padding:12px;
@@ -43,12 +51,17 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
+
 #msg{
   margin-top:10px;
   font-size:14px;
+  color:#f87171;
 }
+
+/* APP */
 #app{ display:none; }
 
+/* HEADER */
 header{
   height:70px;
   background:#020617;
@@ -56,19 +69,23 @@ header{
   align-items:center;
   padding:0 40px;
 }
+
 .logo{
   font-family:'Orbitron';
   color:#3b82f6;
   font-size:22px;
   margin-right:40px;
 }
+
 nav{
   display:flex;
   gap:30px;
   align-items:center;
 }
+
 .menu-item{ position:relative; }
 .menu-btn{ cursor:pointer; }
+
 .dropdown{
   display:none;
   position:absolute;
@@ -79,10 +96,12 @@ nav{
   border-radius:8px;
   min-width:220px;
 }
+
 .dropdown div{
   padding:10px 14px;
   cursor:pointer;
 }
+
 .dropdown div:hover{ background:#1f2a44; }
 .menu-item.active .dropdown{ display:block; }
 </style>
@@ -90,16 +109,18 @@ nav{
 
 <body>
 
+<!-- LOGIN -->
 <div id="login">
   <div class="card">
     <h2>QArion</h2>
     <input id="email" type="email" placeholder="Email">
     <input id="password" type="password" placeholder="Senha">
-    <button id="loginBtn">ENTER</button>
+    <button id="loginBtn">ENTRAR</button>
     <p id="msg"></p>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
 <header>
   <div class="logo">QArion</div>
@@ -109,7 +130,7 @@ nav{
       <div class="dropdown" id="menu-processos"></div>
     </div>
     <div class="menu-item">
-      <div class="menu-btn">IT ▾</div>
+      <div class="menu-btn">Instruções ▾</div>
       <div class="dropdown" id="menu-it"></div>
     </div>
     <div class="menu-item" onclick="logout()">Logout</div>
@@ -118,13 +139,20 @@ nav{
 </div>
 
 <script>
-/* SUPABASE */
+/* ================= SUPABASE (GITHUB PAGES READY) ================= */
 const supabase = window.supabase.createClient(
   "https://shsjvovmdnhshrwmmcvv.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs",
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
 )
 
-/* ELEMENTOS */
+/* ================= ELEMENTOS ================= */
 const loginBtn = document.getElementById("loginBtn")
 const email = document.getElementById("email")
 const password = document.getElementById("password")
@@ -134,13 +162,13 @@ const app = document.getElementById("app")
 const menuProcessos = document.getElementById("menu-processos")
 const menuIT = document.getElementById("menu-it")
 
-/* LOGIN */
+/* ================= LOGIN ================= */
 loginBtn.onclick = async () => {
   msg.style.color = "#9ca3af"
   msg.innerText = "Validando acesso..."
 
   const { error } = await supabase.auth.signInWithPassword({
-    email: email.value,
+    email: email.value.trim(),
     password: password.value
   })
 
@@ -153,35 +181,42 @@ loginBtn.onclick = async () => {
   mostrarApp()
 }
 
-/* SESSION */
+/* ================= SESSION ================= */
 async function verificarSessao(){
   const { data } = await supabase.auth.getSession()
   if(data.session) mostrarApp()
 }
 
+/* ================= APP ================= */
 function mostrarApp(){
   login.style.display = "none"
   app.style.display = "block"
   carregarAreas()
 }
 
-/* AREAS */
+/* ================= AREAS ================= */
 async function carregarAreas(){
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("areas")
     .select("nome")
     .eq("ativa", true)
+    .order("nome")
+
+  if(error){
+    console.log(error)
+    return
+  }
 
   menuProcessos.innerHTML = ""
   menuIT.innerHTML = ""
 
-  data?.forEach(a=>{
+  data.forEach(a=>{
     menuProcessos.innerHTML += `<div>${a.nome}</div>`
     menuIT.innerHTML += `<div>${a.nome}</div>`
   })
 }
 
-/* DROPDOWN */
+/* ================= DROPDOWN ================= */
 document.querySelectorAll(".menu-btn").forEach(btn=>{
   btn.onclick = e=>{
     e.stopPropagation()
@@ -189,16 +224,18 @@ document.querySelectorAll(".menu-btn").forEach(btn=>{
     btn.parentElement.classList.toggle("active")
   }
 })
-document.body.onclick = ()=> {
+
+document.body.onclick = ()=>{
   document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"))
 }
 
-/* LOGOUT */
+/* ================= LOGOUT ================= */
 async function logout(){
   await supabase.auth.signOut()
   location.reload()
 }
 
+/* INIT */
 verificarSessao()
 </script>
 

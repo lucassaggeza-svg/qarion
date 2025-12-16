@@ -18,7 +18,7 @@ body{
   color:#e5e7eb;
 }
 
-/* LOGIN */
+/* ===== LOGIN ===== */
 #login{
   height:100vh;
   display:flex;
@@ -52,13 +52,16 @@ button{
   cursor:pointer;
 }
 
-/* MENU */
+/* ===== MENU ===== */
 header{
   height:70px;
   background:#020617;
   display:flex;
   align-items:center;
   padding:0 40px;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
 .logo{
@@ -71,40 +74,56 @@ header{
 nav{
   display:flex;
   gap:30px;
+  align-items:center;
 }
 
 .menu-item{
   position:relative;
   cursor:pointer;
+  user-select:none;
 }
 
 .dropdown{
   display:none;
   position:absolute;
-  top:30px;
+  top:35px;
   background:#11162a;
   border:1px solid #1f2a44;
-  border-radius:6px;
+  border-radius:8px;
   min-width:220px;
+  max-height:260px;
+  overflow-y:auto;
   z-index:10;
-}
-
-.dropdown div{
-  padding:10px;
-}
-
-.dropdown div:hover{
-  background:#1f2a44;
 }
 
 .menu-item:hover .dropdown{
   display:block;
 }
 
-/* BANNER */
+.dropdown div{
+  padding:10px 14px;
+  cursor:pointer;
+}
+
+.dropdown div:hover{
+  background:#1f2a44;
+}
+
+/* ===== SEARCH ===== */
+.search-bar{
+  margin-left:30px;
+}
+
+.search-bar input{
+  width:260px;
+}
+
+/* ===== BANNER ===== */
 .banner{
-  height:450px;
-  background:radial-gradient(circle at top, #1e293b, #020617);
+  height:520px;
+  background:
+    radial-gradient(circle at top, #1e293b, #020617),
+    linear-gradient(120deg, rgba(59,130,246,.1), transparent);
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -114,15 +133,21 @@ nav{
 
 .banner h1{
   font-family:'Orbitron';
-  font-size:60px;
+  font-size:64px;
   color:#3b82f6;
   text-shadow:0 0 25px #3b82f6;
 }
 
-#carousel{
-  margin-top:20px;
-  font-size:22px;
+.banner span{
+  font-size:28px;
   color:#9ca3af;
+  margin-top:15px;
+  transition:all .5s;
+}
+
+/* ===== CONTENT ===== */
+main{
+  padding:60px;
 }
 </style>
 </head>
@@ -145,18 +170,15 @@ nav{
 
 <header>
   <div class="logo">QArion</div>
+
   <nav>
 
     <div class="menu-item">Processos ▾
-      <div class="dropdown" id="menu-processos">
-        <div>Carregando...</div>
-      </div>
+      <div class="dropdown" id="menu-processos"></div>
     </div>
 
     <div class="menu-item">Instruções de Trabalho ▾
-      <div class="dropdown" id="menu-it">
-        <div>Carregando...</div>
-      </div>
+      <div class="dropdown" id="menu-it"></div>
     </div>
 
     <div class="menu-item">Controle de Mudança ▾
@@ -166,93 +188,95 @@ nav{
       </div>
     </div>
 
-    <div class="menu-item">Treinamentos</div>
     <div class="menu-item">Lista Mestra</div>
     <div class="menu-item">Pendências</div>
     <div class="menu-item" onclick="logout()">Logout</div>
+
+    <div class="search-bar">
+      <input id="searchGlobal" placeholder="Buscar por código ou nome...">
+    </div>
 
   </nav>
 </header>
 
 <section class="banner">
-  <h1>QUALIDADE SGZ</h1>
-  <div id="carousel"></div>
+  <h1>QArion</h1>
+  <span id="bannerWords"></span>
 </section>
+
+<main>
+  <h2>Bem-vindo ao QArion</h2>
+  <p>Sistema de Gestão da Qualidade • Processos • Melhoria Contínua</p>
+</main>
 
 </div>
 
 <script>
-/* SUPABASE */
+/* ===== SUPABASE ===== */
 const supabase = window.supabase.createClient(
   'https://shsjvovmdnhshrwmmcvv.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
+  'SUA_ANON_PUBLIC_KEY_AQUI'
 )
 
-/* LOGIN */
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const email = document.getElementById("email").value
-  const password = document.getElementById("password").value
+/* ===== LOGIN ===== */
+document.getElementById("loginBtn").onclick = async () => {
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.value,
+    password: password.value
+  })
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
-
-  if (error) {
-    document.getElementById("msg").innerText = error.message
+  if(error){
+    msg.innerText = error.message
   } else {
-    document.getElementById("login").style.display = "none"
-    document.getElementById("app").style.display = "block"
+    login.style.display = "none"
+    app.style.display = "block"
     carregarAreas()
   }
-})
+}
 
-/* CARREGAR ÁREAS */
+/* ===== AREAS ===== */
 async function carregarAreas(){
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('areas')
-    .select('id, nome')
-    .eq('ativa', true)
+    .select('id,nome')
+    .eq('ativa',true)
     .order('nome')
 
-  const menus = [
-    document.getElementById("menu-processos"),
-    document.getElementById("menu-it")
-  ]
+  const menus = [menuProcessos, menuIT]
 
   menus.forEach(menu => menu.innerHTML = '')
 
-  if(error){
-    menus.forEach(menu => menu.innerHTML = '<div>Erro ao carregar</div>')
-    return
-  }
-
-  data.forEach(area => {
-    menus.forEach(menu => {
-      const item = document.createElement("div")
-      item.innerText = area.nome
-      item.onclick = () => {
-        alert("Área selecionada: " + area.nome)
-      }
-      menu.appendChild(item)
-    })
+  data.forEach(area=>{
+    const item = document.createElement('div')
+    item.innerText = area.nome
+    item.onclick = ()=> alert('Área selecionada: ' + area.nome)
+    menus.forEach(menu=>menu.appendChild(item.cloneNode(true)))
   })
 }
 
-/* CARROSSEL */
-const textos = [
-  "2026",
-  "Novo sistema de gestão",
-  "Novas tecnologias",
-  "Novos desafios",
+const menuProcessos = document.getElementById('menu-processos')
+const menuIT = document.getElementById('menu-it')
+
+/* ===== BANNER WORDS ===== */
+const palavras = [
+  "Qualidade",
+  "Melhoria Contínua",
   "Excelência",
-  "Melhoria contínua"
+  "Inovação",
+  "Criatividade",
+  "Processos",
+  "Gestão",
+  "Liderança",
+  "Sustentabilidade"
 ]
 
-let i = 0
-setInterval(() => {
-  document.getElementById("carousel").innerText = textos[i]
-  i = (i + 1) % textos.length
-}, 2000)
+let i=0
+setInterval(()=>{
+  bannerWords.innerText = palavras[i]
+  i = (i+1)%palavras.length
+},2000)
 
-/* LOGOUT */
+/* ===== LOGOUT ===== */
 async function logout(){
   await supabase.auth.signOut()
   location.reload()

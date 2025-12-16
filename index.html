@@ -4,98 +4,171 @@
   <meta charset="UTF-8">
   <title>QArion – Quality Management System</title>
 
-  <!-- Supabase oficial -->
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 40px;
-      background: #f5f5f5;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #11162a, #0b0f1a);
+      color: #e5e7eb;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+
+    .container {
+      display: flex;
+      gap: 80px;
+      max-width: 1100px;
+      padding: 60px;
+    }
+
+    .hero {
+      max-width: 500px;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 52px;
+      letter-spacing: 4px;
+      margin: 0;
+    }
+
+    .hero h1 span {
+      color: #3b82f6;
+      text-shadow: 0 0 20px #3b82f6;
+    }
+
+    .hero p {
+      color: #9ca3af;
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+
     .card {
-      background: white;
-      padding: 30px;
-      max-width: 400px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: rgba(17, 22, 42, 0.9);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      padding: 40px;
+      width: 360px;
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
     }
-    button {
-      padding: 10px;
+
+    .card h3 {
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    input {
       width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      background: #0b0f1a;
+      border: 1px solid #1f2a44;
+      color: #e5e7eb;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      border: none;
+      color: #0b0f1a;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border-radius: 6px;
       cursor: pointer;
     }
+
+    button:hover {
+      filter: brightness(1.1);
+    }
+
     ul {
       list-style: none;
       padding: 0;
+      margin-top: 30px;
     }
+
     li {
-      margin: 8px 0;
+      padding: 8px 0;
+      color: #9ca3af;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- LOGIN -->
-  <div id="login" class="card">
-    <h1>QArion</h1>
-    <h3>Quality Management System</h3>
+  <div class="container">
 
-    <h4>Login</h4>
+    <!-- APRESENTAÇÃO -->
+    <div class="hero">
+      <h1><span>QA</span>rion</h1>
+      <p>
+        Sistema de Gestão da Qualidade moderno, seguro e totalmente digital.
+        Controle de documentos, processos, revisões e mudanças em um único ambiente.
+      </p>
+    </div>
 
-    <input id="email" placeholder="Email" style="width:100%;padding:8px"><br><br>
-    <input id="password" type="password" placeholder="Senha" style="width:100%;padding:8px"><br><br>
+    <!-- LOGIN -->
+    <div id="login" class="card">
+      <h3>ACCESS SYSTEM</h3>
 
-    <button id="loginBtn">Entrar</button>
-    <p id="msg"></p>
-  </div>
+      <input id="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Senha">
 
-  <!-- SISTEMA -->
-  <div id="app" class="card" style="display:none;max-width:600px">
-    <h2>Bem-vindo ao QArion</h2>
+      <button id="loginBtn">ENTER</button>
+      <p id="msg"></p>
+    </div>
 
-    <ul>
-      <li>📊 Dashboard</li>
-      <li>🔄 Controle de Mudança</li>
-      <li>🧩 Processos</li>
-      <li>📄 Instruções de Trabalho</li>
-      <li>📝 Formulários</li>
-      <li>📚 Manuais</li>
-    </ul>
+    <!-- SISTEMA -->
+    <div id="app" class="card" style="display:none">
+      <h3>QARION DASHBOARD</h3>
 
-    <button onclick="logout()">Sair</button>
+      <ul>
+        <li>📊 Dashboard</li>
+        <li>🔄 Controle de Mudança</li>
+        <li>🧩 Processos</li>
+        <li>📄 Instruções de Trabalho</li>
+        <li>📝 Formulários</li>
+        <li>📚 Manuais</li>
+      </ul>
+
+      <button onclick="logout()">LOGOUT</button>
+    </div>
+
   </div>
 
   <script>
-    // 🔑 CONFIGURAÇÃO SUPABASE
-    const supabaseUrl = 'https://shsjvovmdnhshrwmmcvv.supabase.co'
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
-
     const supabase = window.supabase.createClient(
-      supabaseUrl,
-      supabaseKey
+      'https://shsjvovmdnhshrwmmcvv.supabase.co',
+      'SUA_ANON_KEY_AQUI'
     )
 
-    // 🔐 LOGIN
     document.getElementById('loginBtn').onclick = async () => {
-      const email = document.getElementById('email').value
-      const password = document.getElementById('password').value
+      const email = email.value
+      const password = password.value
 
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
+        email, password
       })
 
       if (error) {
-        document.getElementById('msg').innerText = error.message
+        msg.innerText = error.message
       } else {
-        document.getElementById('login').style.display = 'none'
-        document.getElementById('app').style.display = 'block'
+        login.style.display = 'none'
+        app.style.display = 'block'
       }
     }
 
-    // 🚪 LOGOUT
     async function logout() {
       await supabase.auth.signOut()
       location.reload()

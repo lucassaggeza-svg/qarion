@@ -20,13 +20,13 @@ body{
 
 /* ===== ANIMAÇÕES ===== */
 @keyframes fadeUp{
-  from{opacity:0; transform:translateY(20px)}
+  from{opacity:0; transform:translateY(30px)}
   to{opacity:1; transform:translateY(0)}
 }
 
 @keyframes pulse{
   0%,100%{transform:scale(1)}
-  50%{transform:scale(1.05)}
+  50%{transform:scale(1.06)}
 }
 
 /* ===== LOGIN ===== */
@@ -39,38 +39,40 @@ body{
 
 .card{
   background:#11162a;
-  padding:40px;
-  border-radius:12px;
+  padding:45px;
+  border-radius:14px;
   border:1px solid #1f2a44;
-  width:380px;
+  width:420px;
   text-align:center;
   animation:fadeUp 1s ease;
 }
 
 .login-logo{
-  width:260px;
-  margin-bottom:25px;
-  animation:pulse 2.5s infinite;
+  width:320px;
+  margin-bottom:30px;
+  animation:pulse 2.8s infinite;
 }
 
 input{
   width:100%;
-  padding:12px;
-  margin-bottom:12px;
+  padding:14px;
+  margin-bottom:14px;
   background:#0b0f1a;
   border:1px solid #1f2a44;
   color:#fff;
-  border-radius:6px;
+  border-radius:8px;
+  font-size:15px;
 }
 
 button{
   width:100%;
-  padding:12px;
+  padding:14px;
   background:#3b82f6;
   border:none;
   font-weight:bold;
   cursor:pointer;
-  border-radius:6px;
+  border-radius:8px;
+  font-size:15px;
 }
 
 button:hover{
@@ -78,13 +80,13 @@ button:hover{
 }
 
 #msg{
-  margin-top:10px;
+  margin-top:12px;
   color:#f87171;
 }
 
 /* ===== HEADER ===== */
 header{
-  height:70px;
+  height:72px;
   background:#020617;
   display:flex;
   align-items:center;
@@ -95,17 +97,17 @@ header{
 }
 
 .logo-topo{
-  height:42px;
+  height:48px;
   margin-right:40px;
 }
 
+/* ===== MENU ===== */
 nav{
   display:flex;
   gap:30px;
   align-items:center;
 }
 
-/* ===== MENU ===== */
 .menu-item{
   position:relative;
 }
@@ -118,19 +120,19 @@ nav{
 .dropdown{
   display:none;
   position:absolute;
-  top:40px;
+  top:42px;
   left:0;
   background:#11162a;
   border:1px solid #1f2a44;
-  border-radius:8px;
-  min-width:220px;
+  border-radius:10px;
+  min-width:230px;
   max-height:260px;
   overflow-y:auto;
   z-index:999;
 }
 
 .dropdown div{
-  padding:10px 14px;
+  padding:11px 15px;
   cursor:pointer;
 }
 
@@ -159,8 +161,8 @@ nav{
 }
 
 .banner-logo{
-  width:220px;
-  margin-bottom:20px;
+  width:260px;
+  margin-bottom:25px;
   animation:fadeUp 1.2s ease;
 }
 
@@ -183,7 +185,7 @@ main{
 <!-- ===== LOGIN ===== -->
 <div id="login">
   <div class="card">
-    <img src="logosite.png" class="login-logo">
+    <img src="sgq.png" class="login-logo">
     <form id="loginForm">
       <input id="email" type="email" placeholder="Email" required>
       <input id="password" type="password" placeholder="Senha" required>
@@ -197,7 +199,7 @@ main{
 <div id="app" style="display:none">
 
 <header>
-  <img src="logosite.png" class="logo-topo">
+  <img src="sgq.png" class="logo-topo">
 
   <nav>
     <div class="menu-item">
@@ -229,7 +231,7 @@ main{
 </header>
 
 <section class="banner">
-  <img src="logosite.png" class="banner-logo">
+  <img src="sgq.png" class="banner-logo">
   <span id="bannerWords"></span>
 </section>
 
@@ -244,26 +246,24 @@ main{
 /* ===== SUPABASE ===== */
 const supabase = window.supabase.createClient(
   'https://shsjvovmdnhshrwmmcvv.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
 )
 
 /* ===== LOGIN ===== */
 document.getElementById("loginForm").addEventListener("submit", async (e)=>{
   e.preventDefault()
-
-  const email = document.getElementById("email").value
-  const password = document.getElementById("password").value
-  const msg = document.getElementById("msg")
-
   msg.innerText = "Entrando..."
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.value,
+    password: password.value
+  })
 
   if(error){
     msg.innerText = error.message
   }else{
-    document.getElementById("login").style.display = "none"
-    document.getElementById("app").style.display = "block"
+    login.style.display="none"
+    app.style.display="block"
     carregarAreas()
   }
 })
@@ -276,35 +276,28 @@ async function carregarAreas(){
     .eq('ativa', true)
     .order('nome')
 
-  const menuProcessos = document.getElementById('menu-processos')
-  const menuIT = document.getElementById('menu-it')
-
-  menuProcessos.innerHTML = ''
-  menuIT.innerHTML = ''
+  document.getElementById("menu-processos").innerHTML=''
+  document.getElementById("menu-it").innerHTML=''
 
   data.forEach(a=>{
-    const p = document.createElement('div')
-    p.innerText = a.nome
-    p.onclick = ()=> alert("Área: " + a.nome)
-
-    const i = document.createElement('div')
-    i.innerText = a.nome
-
-    menuProcessos.appendChild(p)
-    menuIT.appendChild(i)
+    const d1=document.createElement('div')
+    d1.innerText=a.nome
+    const d2=d1.cloneNode(true)
+    document.getElementById("menu-processos").appendChild(d1)
+    document.getElementById("menu-it").appendChild(d2)
   })
 }
 
-/* ===== DROPDOWN ===== */
+/* ===== DROPDOWNS ===== */
 document.querySelectorAll('.menu-btn').forEach(btn=>{
-  btn.onclick = (e)=>{
+  btn.onclick=e=>{
     e.stopPropagation()
     document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'))
     btn.parentElement.classList.toggle('active')
   }
 })
 
-document.body.onclick = ()=>{
+document.body.onclick=()=>{
   document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'))
 }
 

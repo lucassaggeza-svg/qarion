@@ -18,7 +18,7 @@ body{
   color:#e5e7eb;
 }
 
-/* ===== LOGIN ===== */
+/* LOGIN */
 #login{
   height:100vh;
   display:flex;
@@ -52,7 +52,7 @@ button{
   cursor:pointer;
 }
 
-/* ===== MENU ===== */
+/* MENU */
 header{
   height:70px;
   background:#020617;
@@ -85,7 +85,7 @@ nav{
   background:#11162a;
   border:1px solid #1f2a44;
   border-radius:6px;
-  min-width:200px;
+  min-width:220px;
   z-index:10;
 }
 
@@ -101,7 +101,7 @@ nav{
   display:block;
 }
 
-/* ===== BANNER ===== */
+/* BANNER */
 .banner{
   height:450px;
   background:radial-gradient(circle at top, #1e293b, #020617);
@@ -148,21 +148,14 @@ nav{
   <nav>
 
     <div class="menu-item">Processos ▾
-      <div class="dropdown">
-        <div>Qualidade</div>
-        <div>RH</div>
-        <div>Marketplace</div>
-        <div>Inventário</div>
-        <div>Planejamento</div>
-        <div>Compras</div>
+      <div class="dropdown" id="menu-processos">
+        <div>Carregando...</div>
       </div>
     </div>
 
     <div class="menu-item">Instruções de Trabalho ▾
-      <div class="dropdown">
-        <div>Qualidade</div>
-        <div>RH</div>
-        <div>Marketplace</div>
+      <div class="dropdown" id="menu-it">
+        <div>Carregando...</div>
       </div>
     </div>
 
@@ -189,31 +182,61 @@ nav{
 </div>
 
 <script>
-/* ===== SUPABASE ===== */
+/* SUPABASE */
 const supabase = window.supabase.createClient(
   'https://shsjvovmdnhshrwmmcvv.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
 )
 
-/* ===== LOGIN ===== */
+/* LOGIN */
 document.getElementById("loginBtn").addEventListener("click", async () => {
-  const emailValue = document.getElementById("email").value
-  const passwordValue = document.getElementById("password").value
+  const email = document.getElementById("email").value
+  const password = document.getElementById("password").value
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email: emailValue,
-    password: passwordValue
-  })
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
     document.getElementById("msg").innerText = error.message
   } else {
     document.getElementById("login").style.display = "none"
     document.getElementById("app").style.display = "block"
+    carregarAreas()
   }
 })
 
-/* ===== CARROSSEL ===== */
+/* CARREGAR ÁREAS */
+async function carregarAreas(){
+  const { data, error } = await supabase
+    .from('areas')
+    .select('id, nome')
+    .eq('ativa', true)
+    .order('nome')
+
+  const menus = [
+    document.getElementById("menu-processos"),
+    document.getElementById("menu-it")
+  ]
+
+  menus.forEach(menu => menu.innerHTML = '')
+
+  if(error){
+    menus.forEach(menu => menu.innerHTML = '<div>Erro ao carregar</div>')
+    return
+  }
+
+  data.forEach(area => {
+    menus.forEach(menu => {
+      const item = document.createElement("div")
+      item.innerText = area.nome
+      item.onclick = () => {
+        alert("Área selecionada: " + area.nome)
+      }
+      menu.appendChild(item)
+    })
+  })
+}
+
+/* CARROSSEL */
 const textos = [
   "2026",
   "Novo sistema de gestão",
@@ -229,7 +252,7 @@ setInterval(() => {
   i = (i + 1) % textos.length
 }, 2000)
 
-/* ===== LOGOUT ===== */
+/* LOGOUT */
 async function logout(){
   await supabase.auth.signOut()
   location.reload()

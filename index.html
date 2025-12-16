@@ -4,25 +4,71 @@
   <meta charset="UTF-8">
   <title>QArion – Quality Management System</title>
 
-  <!-- Supabase oficial via CDN -->
+  <!-- Supabase oficial -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      max-width: 400px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 8px 0;
+    }
+  </style>
 </head>
 
-<body style="font-family: Arial; padding: 40px">
+<body>
 
-  <h1>QArion</h1>
-  <h3>Quality Management System</h3>
+  <!-- LOGIN -->
+  <div id="login" class="card">
+    <h1>QArion</h1>
+    <h3>Quality Management System</h3>
 
-  <h4>Login</h4>
+    <h4>Login</h4>
 
-  <input id="email" placeholder="Email"><br><br>
-  <input id="password" type="password" placeholder="Senha"><br><br>
+    <input id="email" placeholder="Email" style="width:100%;padding:8px"><br><br>
+    <input id="password" type="password" placeholder="Senha" style="width:100%;padding:8px"><br><br>
 
-  <button id="loginBtn">Entrar</button>
+    <button id="loginBtn">Entrar</button>
+    <p id="msg"></p>
+  </div>
 
-  <p id="msg"></p>
+  <!-- SISTEMA -->
+  <div id="app" class="card" style="display:none;max-width:600px">
+    <h2>Bem-vindo ao QArion</h2>
+
+    <ul>
+      <li>📊 Dashboard</li>
+      <li>🔄 Controle de Mudança</li>
+      <li>🧩 Processos</li>
+      <li>📄 Instruções de Trabalho</li>
+      <li>📝 Formulários</li>
+      <li>📚 Manuais</li>
+    </ul>
+
+    <button onclick="logout()">Sair</button>
+  </div>
 
   <script>
+    // 🔑 CONFIGURAÇÃO SUPABASE
     const supabaseUrl = 'https://shsjvovmdnhshrwmmcvv.supabase.co'
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs'
 
@@ -31,6 +77,7 @@
       supabaseKey
     )
 
+    // 🔐 LOGIN
     document.getElementById('loginBtn').onclick = async () => {
       const email = document.getElementById('email').value
       const password = document.getElementById('password').value
@@ -40,8 +87,18 @@
         password
       })
 
-      document.getElementById('msg').innerText =
-        error ? error.message : 'Login realizado com sucesso!'
+      if (error) {
+        document.getElementById('msg').innerText = error.message
+      } else {
+        document.getElementById('login').style.display = 'none'
+        document.getElementById('app').style.display = 'block'
+      }
+    }
+
+    // 🚪 LOGOUT
+    async function logout() {
+      await supabase.auth.signOut()
+      location.reload()
     }
   </script>
 

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>QArion – Login Teste</title>
+<title>QArion – Teste Login</title>
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
@@ -16,31 +16,26 @@ body{
   font-family:Arial;
   background:#f3f2ee;
 }
-
 .card{
   background:#fff;
   padding:40px;
-  border-radius:12px;
+  border-radius:10px;
   width:360px;
   border:1px solid #ccc;
 }
-
-input, button{
+input,button{
   width:100%;
   padding:12px;
   margin-top:10px;
 }
-
 button{
   background:#2f6b4f;
   color:#fff;
   border:none;
   cursor:pointer;
 }
-
 #msg{
   margin-top:15px;
-  color:red;
 }
 </style>
 </head>
@@ -62,7 +57,6 @@ button{
 <script>
 console.log("JS INICIADO");
 
-/* SUPABASE */
 const supabase = window.supabase.createClient(
   "https://shsjvovmdnhshrwmmcvv.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs"
@@ -71,7 +65,7 @@ const supabase = window.supabase.createClient(
 const form = document.getElementById("loginForm");
 const msg = document.getElementById("msg");
 
-form.addEventListener("submit", async (e)=>{
+form.addEventListener("submit", async function(e){
   e.preventDefault();
 
   msg.innerText = "Tentando login...";
@@ -79,19 +73,18 @@ form.addEventListener("submit", async (e)=>{
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
+  const result = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password
   });
 
-  if(error){
-    console.error(error);
-    msg.innerText = error.message;
-    return;
+  if(result.error){
+    console.error(result.error);
+    msg.innerText = result.error.message;
+  } else {
+    msg.style.color = "green";
+    msg.innerText = "LOGIN FUNCIONOU ✔";
   }
-
-  msg.style.color = "green";
-  msg.innerText = "LOGIN FUNCIONOU ✔";
 });
 </script>
 

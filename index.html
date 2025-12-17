@@ -2,284 +2,97 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>QArion – Sistema de Gestão da Qualidade</title>
+<title>QArion – Login Teste</title>
 
-<!-- Fonte -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-<!-- Supabase -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <style>
-:root{
-  --bg-main:#f5f0e6; /* bege baseado no logo */
-  --accent:#2f6b4f;   /* verde do logo */
-  --text-main:#1f3d2b;
-  --text-muted:#4b6b5a;
-}
-
-*{box-sizing:border-box;}
-
 body{
   margin:0;
-  font-family:'Inter', sans-serif;
-  background:var(--bg-main);
-  color:var(--text-main);
-}
-
-/* ===== LOGIN ===== */
-#login{
   height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
+  font-family:Arial;
+  background:#f3f2ee;
 }
 
 .card{
-  background:transparent; /* sem fundo branco */
-  padding:40px;
-  border-radius:16px;
-  width:360px;
-  text-align:center;
-}
-
-/* LOGO LOGIN */
-.logo-login{
-  width:220px;
-  margin-bottom:25px;
-}
-
-/* INPUTS */
-input{
-  width:100%;
-  padding:12px;
-  margin-bottom:14px;
-  border-radius:8px;
-  border:1px solid var(--accent);
-  font-size:14px;
   background:#fff;
-  color:#000;
+  padding:40px;
+  border-radius:12px;
+  width:360px;
+  border:1px solid #ccc;
 }
 
-/* BOTÃO */
-button{
+input, button{
   width:100%;
   padding:12px;
-  background:var(--accent);
-  border:none;
-  border-radius:8px;
-  font-weight:600;
-  color:#fff;
-  cursor:pointer;
+  margin-top:10px;
 }
 
-button:hover{
-  opacity:.9;
+button{
+  background:#2f6b4f;
+  color:#fff;
+  border:none;
+  cursor:pointer;
 }
 
 #msg{
-  margin-top:12px;
-  font-size:14px;
+  margin-top:15px;
   color:red;
-}
-
-/* ===== APP ===== */
-#app{ display:none; }
-
-/* ===== HEADER ===== */
-header{
-  height:70px;
-  background:#e0d9c5;
-  display:flex;
-  align-items:center;
-  padding:0 40px;
-  border-bottom:1px solid #c0bba7;
-}
-
-.logo{
-  font-size:22px;
-  font-weight:600;
-  margin-right:50px;
-}
-
-nav{
-  display:flex;
-  gap:30px;
-  align-items:center;
-}
-
-.menu-item{
-  position:relative;
-}
-
-.menu-btn{
-  cursor:pointer;
-  user-select:none;
-  font-weight:500;
-}
-
-.dropdown{
-  display:none;
-  position:absolute;
-  top:38px;
-  left:0;
-  background:#fff;
-  border:1px solid #c0bba7;
-  border-radius:10px;
-  min-width:220px;
-  max-height:260px;
-  overflow-y:auto;
-  z-index:10;
-}
-
-.dropdown div{
-  padding:10px 14px;
-  cursor:pointer;
-}
-
-.dropdown div:hover{
-  background:#f1f1ed;
-}
-
-.menu-item.active .dropdown{
-  display:block;
-}
-
-/* MAIN */
-main{
-  padding:60px;
-}
-
-main p{
-  color:var(--text-muted);
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="login">
-  <div class="card">
-    <img src="entrada.png" alt="Logo QArion" class="logo-login">
-    <form id="loginForm">
-      <input id="email" type="email" placeholder="Email" required>
-      <input id="password" type="password" placeholder="Senha" required>
-      <button type="submit">Entrar</button>
-    </form>
-    <p id="msg"></p>
-  </div>
-</div>
+<div class="card">
+  <h2>QArion</h2>
 
-<!-- APP -->
-<div id="app">
-<header>
-  <div class="logo">QArion</div>
-  <nav>
-    <div class="menu-item">
-      <div class="menu-btn">Processos ▾</div>
-      <div class="dropdown" id="menu-processos"></div>
-    </div>
-    <div class="menu-item">
-      <div class="menu-btn">Instruções ▾</div>
-      <div class="dropdown" id="menu-it"></div>
-    </div>
-    <div class="menu-item">Lista Mestra</div>
-    <div class="menu-item" onclick="logout()">Logout</div>
-  </nav>
-</header>
+  <form id="loginForm">
+    <input id="email" type="email" placeholder="Email" required>
+    <input id="password" type="password" placeholder="Senha" required>
+    <button type="submit">Entrar</button>
+  </form>
 
-<main>
-  <h2>Bem-vindo ao QArion</h2>
-  <p>Sistema de Gestão da Qualidade • Processos • Melhoria Contínua</p>
-</main>
+  <p id="msg"></p>
 </div>
 
 <script>
-/* ===== SUPABASE ===== */
-const supabase = supabase.createClient(
+console.log("JS INICIADO");
+
+/* SUPABASE */
+const supabase = window.supabase.createClient(
   "https://shsjvovmdnhshrwmmcvv.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs"
 );
 
-/* ELEMENTOS */
-const loginForm = document.getElementById("loginForm");
+const form = document.getElementById("loginForm");
 const msg = document.getElementById("msg");
-const loginDiv = document.getElementById("login");
-const appDiv = document.getElementById("app");
-const menuProcessos = document.getElementById("menu-processos");
-const menuIT = document.getElementById("menu-it");
 
-/* LOGIN */
-loginForm.addEventListener("submit", async (e)=>{
+form.addEventListener("submit", async (e)=>{
   e.preventDefault();
-  const email = document.getElementById("email").value.trim();
+
+  msg.innerText = "Tentando login...";
+
+  const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  msg.style.color = var(--accent);
-  msg.innerText = "Validando acesso...";
-
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
   if(error){
-    msg.style.color = "red";
-    msg.innerText = "Email ou senha inválidos.";
+    console.error(error);
+    msg.innerText = error.message;
     return;
   }
 
-  mostrarApp();
+  msg.style.color = "green";
+  msg.innerText = "LOGIN FUNCIONOU ✔";
 });
-
-/* SESSÃO */
-supabase.auth.onAuthStateChange((event, session)=>{
-  if(session) mostrarApp();
-});
-
-(async ()=>{
-  const { data } = await supabase.auth.getSession();
-  if(data.session) mostrarApp();
-})();
-
-/* FUNÇÕES */
-function mostrarApp(){
-  loginDiv.style.display = "none";
-  appDiv.style.display = "block";
-  carregarAreas();
-}
-
-async function carregarAreas(){
-  const { data, error } = await supabase.from("areas").select("id,nome").eq("ativa", true).order("nome");
-  if(error){ console.log(error); return; }
-
-  menuProcessos.innerHTML = "";
-  menuIT.innerHTML = "";
-
-  data.forEach(a=>{
-    const p = document.createElement("div");
-    p.innerText = a.nome;
-    menuProcessos.appendChild(p);
-
-    const it = document.createElement("div");
-    it.innerText = a.nome;
-    menuIT.appendChild(it);
-  });
-}
-
-/* DROPDOWN */
-document.querySelectorAll(".menu-btn").forEach(btn=>{
-  btn.onclick = e=>{
-    e.stopPropagation();
-    document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"));
-    btn.parentElement.classList.toggle("active");
-  };
-});
-document.body.onclick = ()=>document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"));
-
-/* LOGOUT */
-async function logout(){
-  await supabase.auth.signOut();
-  location.reload();
-}
 </script>
 
 </body>

@@ -83,7 +83,7 @@ nav{
   align-items:center;
 }
 
-.menu-item{ position:relative; }
+.menu-item{ position:relative; cursor:pointer; }
 .menu-btn{ cursor:pointer; }
 
 .dropdown{
@@ -95,6 +95,7 @@ nav{
   border:1px solid #1f2a44;
   border-radius:8px;
   min-width:220px;
+  z-index: 10;
 }
 
 .dropdown div{
@@ -139,20 +140,13 @@ nav{
 </div>
 
 <script>
-/* ================= SUPABASE (GITHUB PAGES READY) ================= */
-const supabase = window.supabase.createClient(
+// ================= SUPABASE =================
+const supabase = supabase.createClient(
   "https://shsjvovmdnhshrwmmcvv.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs",
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
-    }
-  }
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs"
 )
 
-/* ================= ELEMENTOS ================= */
+// ================= ELEMENTOS =================
 const loginBtn = document.getElementById("loginBtn")
 const email = document.getElementById("email")
 const password = document.getElementById("password")
@@ -162,39 +156,49 @@ const app = document.getElementById("app")
 const menuProcessos = document.getElementById("menu-processos")
 const menuIT = document.getElementById("menu-it")
 
-/* ================= LOGIN ================= */
+// ================= LOGIN =================
 loginBtn.onclick = async () => {
-  msg.style.color = "#9ca3af"
-  msg.innerText = "Validando acesso..."
+  const userEmail = email.value.trim()
+  const userPassword = password.value
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email: email.value.trim(),
-    password: password.value
-  })
-
-  if(error){
+  if(!userEmail || !userPassword){
     msg.style.color = "#f87171"
-    msg.innerText = error.message
+    msg.innerText = "Preencha email e senha"
     return
   }
 
-  mostrarApp()
+  msg.style.color = "#9ca3af"
+  msg.innerText = "Validando acesso..."
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userEmail,
+      password: userPassword
+    })
+
+    if(error) throw error
+
+    mostrarApp()
+  } catch (err) {
+    msg.style.color = "#f87171"
+    msg.innerText = err.message
+  }
 }
 
-/* ================= SESSION ================= */
+// ================= SESSION =================
 async function verificarSessao(){
   const { data } = await supabase.auth.getSession()
   if(data.session) mostrarApp()
 }
 
-/* ================= APP ================= */
+// ================= APP =================
 function mostrarApp(){
   login.style.display = "none"
   app.style.display = "block"
   carregarAreas()
 }
 
-/* ================= AREAS ================= */
+// ================= AREAS =================
 async function carregarAreas(){
   const { data, error } = await supabase
     .from("areas")
@@ -216,7 +220,7 @@ async function carregarAreas(){
   })
 }
 
-/* ================= DROPDOWN ================= */
+// ================= DROPDOWN =================
 document.querySelectorAll(".menu-btn").forEach(btn=>{
   btn.onclick = e=>{
     e.stopPropagation()
@@ -229,13 +233,13 @@ document.body.onclick = ()=>{
   document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"))
 }
 
-/* ================= LOGOUT ================= */
+// ================= LOGOUT =================
 async function logout(){
   await supabase.auth.signOut()
   location.reload()
 }
 
-/* INIT */
+// ================= INIT =================
 verificarSessao()
 </script>
 

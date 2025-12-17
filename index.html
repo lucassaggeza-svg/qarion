@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>QArion – Teste Login</title>
+<title>QArion</title>
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
@@ -13,29 +13,43 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+  background:#f2f1ec;
   font-family:Arial;
-  background:#f3f2ee;
 }
+
 .card{
-  background:#fff;
+  background:#ffffff;
   padding:40px;
-  border-radius:10px;
   width:360px;
+  border-radius:12px;
   border:1px solid #ccc;
 }
-input,button{
+
+h2{
+  text-align:center;
+  color:#1f4d3a;
+}
+
+input{
   width:100%;
   padding:12px;
-  margin-top:10px;
+  margin-top:12px;
 }
+
 button{
-  background:#2f6b4f;
+  width:100%;
+  padding:12px;
+  margin-top:20px;
+  background:#1f4d3a;
   color:#fff;
   border:none;
   cursor:pointer;
+  font-weight:bold;
 }
+
 #msg{
   margin-top:15px;
+  text-align:center;
 }
 </style>
 </head>
@@ -45,47 +59,43 @@ button{
 <div class="card">
   <h2>QArion</h2>
 
-  <form id="loginForm">
-    <input id="email" type="email" placeholder="Email" required>
-    <input id="password" type="password" placeholder="Senha" required>
-    <button type="submit">Entrar</button>
-  </form>
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Senha">
 
-  <p id="msg"></p>
+  <!-- BOTÃO NORMAL, NÃO SUBMIT -->
+  <button onclick="login()">Entrar</button>
+
+  <div id="msg"></div>
 </div>
 
 <script>
-console.log("JS INICIADO");
+console.log("JS CARREGADO");
 
 const supabase = window.supabase.createClient(
   "https://shsjvovmdnhshrwmmcvv.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs"
 );
 
-const form = document.getElementById("loginForm");
-const msg = document.getElementById("msg");
-
-form.addEventListener("submit", async function(e){
-  e.preventDefault();
+async function login(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const msg = document.getElementById("msg");
 
   msg.innerText = "Tentando login...";
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const result = await supabase.auth.signInWithPassword({
+  const { error, data } = await supabase.auth.signInWithPassword({
     email: email,
     password: password
   });
 
-  if(result.error){
-    console.error(result.error);
-    msg.innerText = result.error.message;
+  if(error){
+    console.error(error);
+    msg.innerText = error.message;
   } else {
     msg.style.color = "green";
     msg.innerText = "LOGIN FUNCIONOU ✔";
   }
-});
+}
 </script>
 
 </body>

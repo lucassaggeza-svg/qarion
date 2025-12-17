@@ -12,16 +12,13 @@
 
 <style>
 :root{
-  --bg-main:#f3f2ee;
-  --bg-card:#ffffff;
-  --bg-header:#e7e5df;
-  --border:#d6d3c9;
+  --bg-main:#f5f0e6; /* bege baseado no logo */
+  --accent:#2f6b4f;   /* verde do logo */
   --text-main:#1f3d2b;
   --text-muted:#4b6b5a;
-  --accent:#2f6b4f;
 }
 
-*{ box-sizing:border-box; }
+*{box-sizing:border-box;}
 
 body{
   margin:0;
@@ -39,11 +36,10 @@ body{
 }
 
 .card{
-  background:var(--bg-card);
+  background:transparent; /* sem fundo branco */
   padding:40px;
   border-radius:16px;
-  border:1px solid var(--border);
-  width:400px;
+  width:360px;
   text-align:center;
 }
 
@@ -59,8 +55,10 @@ input{
   padding:12px;
   margin-bottom:14px;
   border-radius:8px;
-  border:1px solid var(--border);
+  border:1px solid var(--accent);
   font-size:14px;
+  background:#fff;
+  color:#000;
 }
 
 /* BOTÃO */
@@ -82,6 +80,7 @@ button:hover{
 #msg{
   margin-top:12px;
   font-size:14px;
+  color:red;
 }
 
 /* ===== APP ===== */
@@ -90,11 +89,11 @@ button:hover{
 /* ===== HEADER ===== */
 header{
   height:70px;
-  background:var(--bg-header);
+  background:#e0d9c5;
   display:flex;
   align-items:center;
   padding:0 40px;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid #c0bba7;
 }
 
 .logo{
@@ -125,7 +124,7 @@ nav{
   top:38px;
   left:0;
   background:#fff;
-  border:1px solid var(--border);
+  border:1px solid #c0bba7;
   border-radius:10px;
   min-width:220px;
   max-height:260px;
@@ -146,11 +145,6 @@ nav{
   display:block;
 }
 
-/* SEARCH */
-.search-bar input{
-  width:260px;
-}
-
 /* MAIN */
 main{
   padding:60px;
@@ -167,52 +161,31 @@ main p{
 <!-- LOGIN -->
 <div id="login">
   <div class="card">
-
-    <!-- LOGO -->
-    <img src="entrada.png" alt="Logo Entrada" class="logo-login">
-
+    <img src="entrada.png" alt="Logo QArion" class="logo-login">
     <form id="loginForm">
       <input id="email" type="email" placeholder="Email" required>
       <input id="password" type="password" placeholder="Senha" required>
       <button type="submit">Entrar</button>
     </form>
-
     <p id="msg"></p>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
-
 <header>
   <div class="logo">QArion</div>
-
   <nav>
     <div class="menu-item">
       <div class="menu-btn">Processos ▾</div>
       <div class="dropdown" id="menu-processos"></div>
     </div>
-
     <div class="menu-item">
-      <div class="menu-btn">Instruções de Trabalho ▾</div>
+      <div class="menu-btn">Instruções ▾</div>
       <div class="dropdown" id="menu-it"></div>
     </div>
-
-    <div class="menu-item">
-      <div class="menu-btn">Controle de Mudança ▾</div>
-      <div class="dropdown">
-        <div>Novo CM</div>
-        <div>Status do CM</div>
-      </div>
-    </div>
-
     <div class="menu-item">Lista Mestra</div>
-    <div class="menu-item">Pendências</div>
     <div class="menu-item" onclick="logout()">Logout</div>
-
-    <div class="search-bar">
-      <input placeholder="Buscar processo ou código...">
-    </div>
   </nav>
 </header>
 
@@ -220,7 +193,6 @@ main p{
   <h2>Bem-vindo ao QArion</h2>
   <p>Sistema de Gestão da Qualidade • Processos • Melhoria Contínua</p>
 </main>
-
 </div>
 
 <script>
@@ -230,7 +202,7 @@ const supabase = supabase.createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs"
 );
 
-/* ===== ELEMENTOS ===== */
+/* ELEMENTOS */
 const loginForm = document.getElementById("loginForm");
 const msg = document.getElementById("msg");
 const loginDiv = document.getElementById("login");
@@ -238,19 +210,19 @@ const appDiv = document.getElementById("app");
 const menuProcessos = document.getElementById("menu-processos");
 const menuIT = document.getElementById("menu-it");
 
-/* ===== LOGIN ===== */
+/* LOGIN */
 loginForm.addEventListener("submit", async (e)=>{
   e.preventDefault();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
-  msg.style.color = "#2f6b4f";
+  msg.style.color = var(--accent);
   msg.innerText = "Validando acesso...";
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if(error){
-    msg.style.color = "#8b2c2c";
+    msg.style.color = "red";
     msg.innerText = "Email ou senha inválidos.";
     return;
   }
@@ -258,7 +230,7 @@ loginForm.addEventListener("submit", async (e)=>{
   mostrarApp();
 });
 
-/* ===== SESSÃO ===== */
+/* SESSÃO */
 supabase.auth.onAuthStateChange((event, session)=>{
   if(session) mostrarApp();
 });
@@ -268,7 +240,7 @@ supabase.auth.onAuthStateChange((event, session)=>{
   if(data.session) mostrarApp();
 })();
 
-/* ===== FUNÇÕES ===== */
+/* FUNÇÕES */
 function mostrarApp(){
   loginDiv.style.display = "none";
   appDiv.style.display = "block";
@@ -293,7 +265,7 @@ async function carregarAreas(){
   });
 }
 
-/* ===== DROPDOWN ===== */
+/* DROPDOWN */
 document.querySelectorAll(".menu-btn").forEach(btn=>{
   btn.onclick = e=>{
     e.stopPropagation();
@@ -303,7 +275,7 @@ document.querySelectorAll(".menu-btn").forEach(btn=>{
 });
 document.body.onclick = ()=>document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"));
 
-/* ===== LOGOUT ===== */
+/* LOGOUT */
 async function logout(){
   await supabase.auth.signOut();
   location.reload();

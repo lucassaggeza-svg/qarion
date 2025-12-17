@@ -3,114 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>QArion – Quality Management System</title>
-
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-
-<!-- Supabase v2 -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
 <style>
-body{
-  margin:0;
-  font-family:'Inter', sans-serif;
-  background:#0b0f1a;
-  color:#e5e7eb;
-}
-
-/* LOGIN */
-#login{
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.card{
-  background:#11162a;
-  padding:40px;
-  border-radius:12px;
-  border:1px solid #1f2a44;
-  width:360px;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  margin-bottom:12px;
-  background:#0b0f1a;
-  border:1px solid #1f2a44;
-  color:#fff;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  background:#3b82f6;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-#msg{
-  margin-top:10px;
-  font-size:14px;
-  color:#f87171;
-}
-
-/* APP */
-#app{ display:none; }
-
-/* HEADER */
-header{
-  height:70px;
-  background:#020617;
-  display:flex;
-  align-items:center;
-  padding:0 40px;
-}
-
-.logo{
-  font-family:'Orbitron';
-  color:#3b82f6;
-  font-size:22px;
-  margin-right:40px;
-}
-
-nav{
-  display:flex;
-  gap:30px;
-  align-items:center;
-}
-
-.menu-item{ position:relative; cursor:pointer; }
-.menu-btn{ cursor:pointer; }
-
-.dropdown{
-  display:none;
-  position:absolute;
-  top:40px;
-  left:0;
-  background:#11162a;
-  border:1px solid #1f2a44;
-  border-radius:8px;
-  min-width:220px;
-  z-index: 10;
-}
-
-.dropdown div{
-  padding:10px 14px;
-  cursor:pointer;
-}
-
-.dropdown div:hover{ background:#1f2a44; }
-.menu-item.active .dropdown{ display:block; }
+body { margin:0; font-family:'Inter',sans-serif; background:#0b0f1a; color:#e5e7eb;}
+#login{height:100vh; display:flex; align-items:center; justify-content:center;}
+.card{background:#11162a; padding:40px; border-radius:12px; border:1px solid #1f2a44; width:360px;}
+input{width:100%; padding:12px; margin-bottom:12px; background:#0b0f1a; border:1px solid #1f2a44; color:#fff;}
+button{width:100%; padding:12px; background:#3b82f6; border:none; font-weight:bold; cursor:pointer;}
+#msg{margin-top:10px; font-size:14px; color:#f87171;}
+#app{display:none;}
+header{height:70px; background:#020617; display:flex; align-items:center; padding:0 40px;}
+.logo{font-family:'Orbitron'; color:#3b82f6; font-size:22px; margin-right:40px;}
+nav{display:flex; gap:30px; align-items:center;}
+.menu-item{position:relative; cursor:pointer;}
+.dropdown{display:none; position:absolute; top:40px; left:0; background:#11162a; border:1px solid #1f2a44; border-radius:8px; min-width:220px; z-index:10;}
+.dropdown div{padding:10px 14px; cursor:pointer;}
+.menu-item.active .dropdown{display:block;}
 </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
 <div id="login">
   <div class="card">
     <h2>QArion</h2>
@@ -121,7 +33,6 @@ nav{
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
 <header>
   <div class="logo">QArion</div>
@@ -140,13 +51,12 @@ nav{
 </div>
 
 <script>
-// ================= SUPABASE =================
+// inicializa supabase
 const supabase = supabase.createClient(
   "https://shsjvovmdnhshrwmmcvv.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs"
 )
 
-// ================= ELEMENTOS =================
 const loginBtn = document.getElementById("loginBtn")
 const email = document.getElementById("email")
 const password = document.getElementById("password")
@@ -156,7 +66,7 @@ const app = document.getElementById("app")
 const menuProcessos = document.getElementById("menu-processos")
 const menuIT = document.getElementById("menu-it")
 
-// ================= LOGIN =================
+// login
 loginBtn.onclick = async () => {
   const userEmail = email.value.trim()
   const userPassword = password.value
@@ -170,57 +80,50 @@ loginBtn.onclick = async () => {
   msg.style.color = "#9ca3af"
   msg.innerText = "Validando acesso..."
 
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: userEmail,
-      password: userPassword
-    })
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: userEmail,
+    password: userPassword
+  })
 
-    if(error) throw error
-
-    mostrarApp()
-  } catch (err) {
+  if(error){
     msg.style.color = "#f87171"
-    msg.innerText = err.message
+    msg.innerText = error.message
+    return
   }
+
+  // atualiza a interface
+  mostrarApp()
 }
 
-// ================= SESSION =================
-async function verificarSessao(){
-  const { data } = await supabase.auth.getSession()
-  if(data.session) mostrarApp()
-}
+// verifica se há sessão
+supabase.auth.onAuthStateChange((event, session) => {
+  if(session) mostrarApp()
+})
 
-// ================= APP =================
+// mostra app
 function mostrarApp(){
   login.style.display = "none"
   app.style.display = "block"
   carregarAreas()
 }
 
-// ================= AREAS =================
+// carrega áreas
 async function carregarAreas(){
   const { data, error } = await supabase
     .from("areas")
     .select("nome")
     .eq("ativa", true)
     .order("nome")
-
-  if(error){
-    console.log(error)
-    return
-  }
-
+  if(error){ console.log(error); return }
   menuProcessos.innerHTML = ""
   menuIT.innerHTML = ""
-
   data.forEach(a=>{
     menuProcessos.innerHTML += `<div>${a.nome}</div>`
     menuIT.innerHTML += `<div>${a.nome}</div>`
   })
 }
 
-// ================= DROPDOWN =================
+// dropdown
 document.querySelectorAll(".menu-btn").forEach(btn=>{
   btn.onclick = e=>{
     e.stopPropagation()
@@ -228,20 +131,19 @@ document.querySelectorAll(".menu-btn").forEach(btn=>{
     btn.parentElement.classList.toggle("active")
   }
 })
+document.body.onclick = ()=>document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"))
 
-document.body.onclick = ()=>{
-  document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"))
-}
-
-// ================= LOGOUT =================
+// logout
 async function logout(){
   await supabase.auth.signOut()
   location.reload()
 }
 
-// ================= INIT =================
-verificarSessao()
+// verifica sessão inicial
+(async()=>{ 
+  const { data } = await supabase.auth.getSession()
+  if(data.session) mostrarApp()
+})()
 </script>
-
 </body>
 </html>

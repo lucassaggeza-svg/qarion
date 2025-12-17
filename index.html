@@ -14,7 +14,7 @@ body{
   align-items:center;
   justify-content:center;
   background:#f2f1ec;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
 }
 
 .card{
@@ -62,40 +62,39 @@ button{
   <input id="email" type="email" placeholder="Email">
   <input id="password" type="password" placeholder="Senha">
 
-  <!-- BOTÃO NORMAL, NÃO SUBMIT -->
-  <button onclick="login()">Entrar</button>
+  <button id="btn">Entrar</button>
 
   <div id="msg"></div>
 </div>
 
 <script>
-console.log("JS CARREGADO");
+console.log("JS OK - QArion");
 
 const supabase = window.supabase.createClient(
   "https://shsjvovmdnhshrwmmcvv.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoc2p2b3ZtZG5oc2hyd21tY3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Njg3OTIsImV4cCI6MjA4MTQ0NDc5Mn0.Nh5fjdyJufO3TF4X4q0lPlLDDwQ-aWNefaLmzMO1EMs"
 );
 
-async function login(){
+document.getElementById("btn").addEventListener("click", async () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const msg = document.getElementById("msg");
 
   msg.innerText = "Tentando login...";
 
-  const { error, data } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
   });
 
   if(error){
-    console.error(error);
     msg.innerText = error.message;
+    msg.style.color = "red";
   } else {
+    msg.innerText = "LOGIN OK ✔";
     msg.style.color = "green";
-    msg.innerText = "LOGIN FUNCIONOU ✔";
   }
-}
+});
 </script>
 
 </body>
